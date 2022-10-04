@@ -103,7 +103,7 @@ function init() {
     material = new THREE.MeshMatcapMaterial( { color: 0x36eb66 } );
     const vector_v = ( new THREE.Mesh( geometry, material ) );
 
-    // Vector W
+    // Vector Normal
     geometry = new THREE.OctahedronGeometry( 0.5 );
     material = new THREE.MeshMatcapMaterial( { color: 0xf7af31 } );
     const vector_normal = ( new THREE.Mesh( geometry, material ) );
@@ -124,6 +124,17 @@ function init() {
         } );
     const plane_space = ( new THREE.Mesh( geometry, material ) );
 
+    // axis
+    geometry = new THREE.BoxGeometry( 0.15, 0.15, 20 );
+    material = new THREE.MeshBasicMaterial( 
+        { 
+            color: 0xf7af31, 
+            transparent: true, 
+            opacity: 0.4, 
+            side: THREE.DoubleSide 
+        } );
+    const plane_axis = ( new THREE.Mesh( geometry, material ) );
+
     // < Init: Transformations >
 
     // < scene.add >
@@ -133,6 +144,7 @@ function init() {
     scene.add( vector_normal ); // scene.children[3]
     scene.add( vector_v_rotated ); // scene.children[4]
     scene.add( plane_space ); // scene.children[5]
+    scene.add( plane_axis ); // scene.children[6]
 
     camera.position.z = 10;
 }
@@ -143,7 +155,6 @@ function animate() {
 
     const vector_v = scene.children[2].position;
     const vector_normal = scene.children[3].position;
-    const plane_space = scene.children[5];
 
     // update vector' position
     vector_v.copy( vec_v_pos );
@@ -180,8 +191,10 @@ function animate() {
     }
 
     // Rotate Plane
+    const plane_space = scene.children[5];
+    const plane_axis = scene.children[6];
     plane_space.lookAt( vector_normal );
-
+    plane_axis.lookAt( vector_normal );
 
     renderer.render( scene, camera );
     labelRenderer.render( scene, camera );
